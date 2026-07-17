@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApplyAI - Intelligent Job Application Assistant</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <span class="logo-text">Apply<span>AI</span></span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="profile">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span>Master Profile</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="analyzer">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    <span>Job Analyzer</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="tailor">
+                    <i class="fa-solid fa-file-pen"></i>
+                    <span>Tailoring Hub</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="autofill">
+                    <i class="fa-solid fa-puzzle-piece"></i>
+                    <span>Autofill Mock</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="interview">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>Interview Prep</span>
+                </a>
+            </nav>
+
+            <div class="user-card-footer">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop" alt="User Profile" class="avatar">
+                <div class="user-info">
+                    <span class="user-name" id="footer-username">Alex Carter</span>
+                    <span class="user-role">Software Engineer</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p class="subtitle" id="page-subtitle">Track, tailor, and automate your job applications</p>
+                </div>
+                <div class="header-right">
+                    <div class="quick-status">
+                        <i class="fa-solid fa-circle-check text-success"></i>
+                        <span>AI Engine Online</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- TABS CONTAINER -->
+            <div class="tab-viewport">
+                
+                <!-- 1. DASHBOARD TAB -->
+                <section id="tab-dashboard" class="tab-pane active">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-indigo-glow">
+                                <i class="fa-solid fa-briefcase"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 id="stat-total-apps">0</h3>
+                                <p>Total Applications</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-cyan-glow">
+                                <i class="fa-solid fa-percent"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 id="stat-avg-match">0%</h3>
+                                <p>Avg Match Score</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-green-glow">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 id="stat-interviews">0</h3>
+                                <p>Interviews Scheduled</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-purple-glow">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 id="stat-offers">0</h3>
+                                <p>Offers Secured</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kanban Section -->
+                    <div class="section-card mt-6">
+                        <div class="card-header">
+                            <h2>Application Pipeline</h2>
+                            <button class="btn btn-primary" id="btn-add-app-manual">
+                                <i class="fa-solid fa-plus"></i> Add Application
+                            </button>
+                        </div>
+                        
+                        <div class="kanban-board">
+                            <!-- Discovered -->
+                            <div class="kanban-column" data-status="Discovered">
+                                <div class="column-header">
+                                    <span class="dot bg-blue"></span>
+                                    <h3>Discovered</h3>
+                                    <span class="count" id="count-discovered">0</span>
+                                </div>
+                                <div class="kanban-cards" id="col-discovered"></div>
+                            </div>
+                            
+                            <!-- Tailored -->
+                            <div class="kanban-column" data-status="Tailored">
+                                <div class="column-header">
+                                    <span class="dot bg-purple"></span>
+                                    <h3>Tailored</h3>
+                                    <span class="count" id="count-tailored">0</span>
+                                </div>
+                                <div class="kanban-cards" id="col-tailored"></div>
+                            </div>
+
+                            <!-- Applied -->
+                            <div class="kanban-column" data-status="Applied">
+                                <div class="column-header">
+                                    <span class="dot bg-orange"></span>
+                                    <h3>Applied</h3>
+                                    <span class="count" id="count-applied">0</span>
+                                </div>
+                                <div class="kanban-cards" id="col-applied"></div>
+                            </div>
+
+                            <!-- Interviewing -->
+                            <div class="kanban-column" data-status="Interviewing">
+                                <div class="column-header">
+                                    <span class="dot bg-cyan"></span>
+                                    <h3>Interviewing</h3>
+                                    <span class="count" id="count-interviewing">0</span>
+                                </div>
+                                <div class="kanban-cards" id="col-interviewing"></div>
+                            </div>
+
+                            <!-- Offer -->
+                            <div class="kanban-column" data-status="Offer">
+                                <div class="column-header">
+                                    <span class="dot bg-green"></span>
+                                    <h3>Offer</h3>
+                                    <span class="count" id="count-offer">0</span>
+                                </div>
+                                <div class="kanban-cards" id="col-offer"></div>
+                            </div>
+
+                            <!-- Rejected -->
+                            <div class="kanban-column" data-status="Rejected">
+                                <div class="column-header">
+                                    <span class="dot bg-red"></span>
+                                    <h3>Archived</h3>
+                                    <span class="count" id="count-rejected">0</span>
+                                </div>
+                                <div class="kanban-cards" id="col-rejected"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. MASTER PROFILE TAB -->
+                <section id="tab-profile" class="tab-pane">
+                    <div class="profile-layout">
+                        <!-- Left Navigation for Profile Sections -->
+                        <div class="profile-sidebar">
+                            <button class="profile-nav-item active" data-profile-sec="personal">
+                                <i class="fa-solid fa-address-card"></i> Personal Details
+                            </button>
+                            <button class="profile-nav-item" data-profile-sec="education">
+                                <i class="fa-solid fa-graduation-cap"></i> Education
+                            </button>
+                            <button class="profile-nav-item" data-profile-sec="experience">
+                                <i class="fa-solid fa-briefcase"></i> Work Experience
+                            </button>
+                            <button class="profile-nav-item" data-profile-sec="projects">
+                                <i class="fa-solid fa-code"></i> Projects
+                            </button>
+                            <button class="profile-nav-item" data-profile-sec="skills">
+                                <i class="fa-solid fa-gears"></i> Core Skills
+                            </button>
+                            <button class="profile-nav-item" data-profile-sec="preferences">
+                                <i class="fa-solid fa-sliders"></i> Preferences
+                            </button>
+                            
+                            <div class="resume-importer-box mt-6">
+                                <h4>Resume Parser</h4>
+                                <p>Import data directly from your current PDF resume.</p>
+                                <input type="file" id="resume-file-input" accept=".pdf" style="display:none">
+                                <button type="button" class="btn btn-secondary btn-full mt-4" id="btn-parse-resume-mock">
+                                    <i class="fa-solid fa-upload"></i> Upload PDF Resume
+                                </button>
+                                <div class="parse-loader hidden" id="parse-loader">
+                                    <div class="spinner-small"></div>
+                                    <span id="parse-loader-text">AI Extracting details...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Forms Area -->
+                        <div class="profile-content">
+                            <form id="form-master-profile">
+                                
+                                <!-- Personal Section -->
+                                <div class="profile-section active" id="sec-personal">
+                                    <h3>Personal Details</h3>
+                                    <hr class="section-divider">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="prof-name">Full Name</label>
+                                            <input type="text" id="prof-name" placeholder="John Doe">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prof-email">Email Address</label>
+                                            <input type="email" id="prof-email" placeholder="johndoe@email.com">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prof-phone">Phone Number</label>
+                                            <input type="text" id="prof-phone" placeholder="+1 (555) 123-4567">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prof-linkedin">LinkedIn URL</label>
+                                            <input type="url" id="prof-linkedin" placeholder="https://linkedin.com/in/username">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prof-github">GitHub URL</label>
+                                            <input type="url" id="prof-github" placeholder="https://github.com/username">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prof-website">Portfolio Website</label>
+                                            <input type="url" id="prof-website" placeholder="https://myportfolio.dev">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Education Section -->
+                                <div class="profile-section" id="sec-education">
+                                    <div class="section-title-bar">
+                                        <h3>Education</h3>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="btn-add-edu">
+                                            <i class="fa-solid fa-plus"></i> Add Education
+                                        </button>
+                                    </div>
+                                    <hr class="section-divider">
+                                    <div id="education-list-container">
+                                        <!-- Dynamically generated education blocks -->
+                                    </div>
+                                </div>
+
+                                <!-- Experience Section -->
+                                <div class="profile-section" id="sec-experience">
+                                    <div class="section-title-bar">
+                                        <h3>Work Experience</h3>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="btn-add-exp">
+                                            <i class="fa-solid fa-plus"></i> Add Experience
+                                        </button>
+                                    </div>
+                                    <hr class="section-divider">
+                                    <div id="experience-list-container">
+                                        <!-- Dynamically generated experience blocks -->
+                                    </div>
+                                </div>
+
+                                <!-- Projects Section -->
+                                <div class="profile-section" id="sec-projects">
+                                    <div class="section-title-bar">
+                                        <h3>Featured Projects</h3>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="btn-add-project">
+                                            <i class="fa-solid fa-plus"></i> Add Project
+                                        </button>
+                                    </div>
+                                    <hr class="section-divider">
+                                    <div id="project-list-container">
+                                        <!-- Dynamically generated project blocks -->
+                                    </div>
+                                </div>
+
+                                <!-- Skills Section -->
+                                <div class="profile-section" id="sec-skills">
+                                    <h3>Core Skills</h3>
+                                    <hr class="section-divider">
+                                    <div class="skills-categories-container">
+                                        <div class="skill-category-block">
+                                            <label>Frontend Technologies</label>
+                                            <div class="skills-tag-input-container">
+                                                <div class="skills-tags" id="tags-frontend"></div>
+                                                <input type="text" class="input-tag" data-cat="frontend" placeholder="Add skill + Enter">
+                                            </div>
+                                        </div>
+                                        <div class="skill-category-block mt-4">
+                                            <label>Backend & APIs</label>
+                                            <div class="skills-tag-input-container">
+                                                <div class="skills-tags" id="tags-backend"></div>
+                                                <input type="text" class="input-tag" data-cat="backend" placeholder="Add skill + Enter">
+                                            </div>
+                                        </div>
+                                        <div class="skill-category-block mt-4">
+                                            <label>Databases & Cloud</label>
+                                            <div class="skills-tag-input-container">
+                                                <div class="skills-tags" id="tags-databases"></div>
+                                                <input type="text" class="input-tag" data-cat="databases" placeholder="Add skill + Enter">
+                                            </div>
+                                        </div>
+                                        <div class="skill-category-block mt-4">
+                                            <label>Tools & DevOps</label>
+                                            <div class="skills-tag-input-container">
+                                                <div class="skills-tags" id="tags-tools"></div>
+                                                <input type="text" class="input-tag" data-cat="tools" placeholder="Add skill + Enter">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Preferences Section -->
+                                <div class="profile-section" id="sec-preferences">
+                                    <h3>Career Preferences</h3>
+                                    <hr class="section-divider">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="pref-titles">Desired Job Titles (comma separated)</label>
+                                            <input type="text" id="pref-titles" placeholder="Software Engineer, Full Stack Developer">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pref-min-salary">Minimum Target Salary</label>
+                                            <input type="text" id="pref-min-salary" placeholder="$90,000">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pref-locations">Desired Locations (comma separated)</label>
+                                            <input type="text" id="pref-locations" placeholder="Remote, San Francisco, CA">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Preferred Work Modes</label>
+                                            <div class="checkbox-row mt-2">
+                                                <label class="checkbox-container">
+                                                    <input type="checkbox" id="mode-remote" value="Remote"> Remote
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                                <label class="checkbox-container">
+                                                    <input type="checkbox" id="mode-hybrid" value="Hybrid"> Hybrid
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                                <label class="checkbox-container">
+                                                    <input type="checkbox" id="mode-onsite" value="On-site"> On-site
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Save Profile footer -->
+                                <div class="profile-footer-actions">
+                                    <div id="profile-save-message" class="save-status-msg hidden">
+                                        <i class="fa-solid fa-circle-check"></i> Profile saved successfully!
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa-solid fa-floppy-disk"></i> Save Profile Details
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. JOB ANALYZER TAB -->
+                <section id="tab-analyzer" class="tab-pane">
+                    <div class="analyzer-grid">
+                        
+                        <!-- Left Pane: Input Job Details -->
+                        <div class="analyzer-input-pane">
+                            <div class="section-card">
+                                <h3>New Job Analysis</h3>
+                                <p class="text-secondary mt-1">Paste a job posting's text or input a URL to assess your profile fit.</p>
+                                <hr class="section-divider">
+                                
+                                <form id="form-job-analyzer">
+                                    <div class="form-group">
+                                        <label for="anal-url">Company Career URL (Optional)</label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-link"></i>
+                                            <input type="url" id="anal-url" placeholder="https://careers.google.com/jobs/101...">
+                                        </div>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="anal-company">Company Name (Optional)</label>
+                                            <input type="text" id="anal-company" placeholder="e.g. Google">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="anal-role">Job Title (Optional)</label>
+                                            <input type="text" id="anal-role" placeholder="e.g. Frontend Engineer">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mt-4">
+                                        <label for="anal-jd">Job Description Text *</label>
+                                        <textarea id="anal-jd" rows="12" placeholder="Paste the responsibilities, skills, qualifications and expectations here..." required></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary btn-full mt-4">
+                                        <i class="fa-solid fa-bolt-lightning"></i> Scan & Analyze Fit
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Right Pane: Analysis Outputs -->
+                        <div class="analyzer-output-pane">
+                            <!-- Scanning / Loading Animation Screen -->
+                            <div class="scan-loading-card hidden" id="scan-loading-screen">
+                                <div class="pulse-circle">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <h3>Analyzing Opportunity</h3>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" id="scan-progress-bar"></div>
+                                </div>
+                                <p id="scan-status-text">Connecting to career page...</p>
+                            </div>
+
+                            <!-- Idle State -->
+                            <div class="empty-state-card" id="analyzer-idle-screen">
+                                <div class="empty-state-icon">
+                                    <i class="fa-solid fa-arrow-left-long"></i>
+                                </div>
+                                <h3>Ready for Analysis</h3>
+                                <p>Fill in the job details on the left side to calculate your compatibility score and generate recommendations.</p>
+                            </div>
+
+                            <!-- Results State -->
+                            <div class="analysis-results-card hidden" id="analyzer-results-screen">
+                                <div class="results-header">
+                                    <div>
+                                        <h3 id="res-role">Software Engineer</h3>
+                                        <p class="text-cyan font-semibold" id="res-company">Google</p>
+                                        <p class="text-secondary text-sm mt-1" id="res-meta-details"><i class="fa-solid fa-location-dot"></i> San Francisco, CA &nbsp;•&nbsp; <i class="fa-solid fa-clock"></i> Hybrid</p>
+                                    </div>
+                                    
+                                    <!-- Score Gauge -->
+                                    <div class="score-gauge-container">
+                                        <svg class="score-ring" width="100" height="100">
+                                            <circle class="score-ring-bg" cx="50" cy="50" r="40" />
+                                            <circle class="score-ring-fill" id="score-ring-fill" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2" />
+                                        </svg>
+                                        <div class="score-val" id="res-score-value">0%</div>
+                                    </div>
+                                </div>
+
+                                <hr class="section-divider">
+
+                                <!-- Breakdown Metrics -->
+                                <h4>Fit Breakdown</h4>
+                                <div class="breakdown-grid mt-2">
+                                    <div class="metric-row">
+                                        <span>Skills Match</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-bar-fill bg-cyan" id="breakdown-skills-fill" style="width: 0%"></div>
+                                        </div>
+                                        <span class="metric-val" id="breakdown-skills-val">0%</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span>Experience Match</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-bar-fill bg-purple" id="breakdown-exp-fill" style="width: 0%"></div>
+                                        </div>
+                                        <span class="metric-val" id="breakdown-exp-val">0%</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span>Preferences Match</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-bar-fill bg-green" id="breakdown-prefs-fill" style="width: 0%"></div>
+                                        </div>
+                                        <span class="metric-val" id="breakdown-prefs-val">0%</span>
+                                    </div>
+                                </div>
+
+                                <hr class="section-divider">
+
+                                <!-- Keyword/Skills Comparison -->
+                                <div class="skills-comparison">
+                                    <div>
+                                        <h5 class="text-success"><i class="fa-solid fa-circle-check"></i> Matched Skills</h5>
+                                        <div class="pill-cloud mt-2" id="res-matched-skills-cloud">
+                                            <!-- Green Tags -->
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <h5 class="text-danger"><i class="fa-solid fa-circle-xmark"></i> Missing Skills</h5>
+                                        <div class="pill-cloud mt-2" id="res-missing-skills-cloud">
+                                            <!-- Red Tags -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="section-divider">
+
+                                <!-- Recommendations List -->
+                                <h4>AI Recommendations</h4>
+                                <ul class="recommendation-list mt-2" id="res-recommendation-list">
+                                    <!-- Dynamic points -->
+                                </ul>
+
+                                <div class="results-actions-footer mt-6">
+                                    <button class="btn btn-secondary" id="btn-save-anal-to-pipeline">
+                                        <i class="fa-solid fa-folder-plus"></i> Save to Pipeline
+                                    </button>
+                                    <button class="btn btn-primary" id="btn-trigger-tailoring">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i> Tailor Resume & Letter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 4. TAILOR WORKSPACE TAB -->
+                <section id="tab-tailor" class="tab-pane">
+                    <div class="tailor-container">
+                        <!-- Top Toolbar -->
+                        <div class="tailor-toolbar">
+                            <div class="tailor-active-job">
+                                <h3 id="tailor-title-display">Select an application to start tailoring</h3>
+                                <p class="text-secondary" id="tailor-company-display">Use the dashboard or job analyzer to load a job</p>
+                            </div>
+                            <div class="tailor-actions-group">
+                                <button class="btn btn-secondary" id="btn-print-resume">
+                                    <i class="fa-solid fa-print"></i> Export Resume
+                                </button>
+                                <button class="btn btn-secondary" id="btn-print-letter">
+                                    <i class="fa-solid fa-envelope-open-text"></i> Export Letter
+                                </button>
+                                <button class="btn btn-primary" id="btn-apply-portal-redirect">
+                                    <i class="fa-solid fa-rocket"></i> Autofill Application
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar list of jobs + main split screen -->
+                        <div class="tailor-main-layout mt-4">
+                            <!-- Left Sidebar: Applications list -->
+                            <div class="tailor-job-list" id="tailor-sidebar-app-list">
+                                <!-- App list cards -->
+                            </div>
+
+                            <!-- Right Workspace -->
+                            <div class="tailor-workspace-body" id="tailor-workspace-body">
+                                
+                                <!-- Empty state when no app is loaded -->
+                                <div class="empty-state-card" id="tailor-empty-workspace">
+                                    <div class="empty-state-icon">
+                                        <i class="fa-solid fa-folder-open"></i>
+                                    </div>
+                                    <h3>No Application Loaded</h3>
+                                    <p>Select one of your tracked applications from the left panel, or scan a new job opportunity in the Job Analyzer to tailor your profile documents.</p>
+                                </div>
+
+                                <!-- Active Workspace Split -->
+                                <div class="tailor-split-panes hidden" id="tailor-active-panes">
+                                    
+                                    <!-- Left: Original Profile Reference -->
+                                    <div class="tailor-pane pane-original">
+                                        <div class="pane-header">
+                                            <h4>Master Profile Reference</h4>
+                                        </div>
+                                        <div class="pane-content-scroll">
+                                            <div class="profile-preview-card">
+                                                <h5>Professional Summary</h5>
+                                                <p class="text-secondary mt-1 text-sm">Our system automatically constructs the baseline profile from your education and work experience.</p>
+                                                <div class="preview-box mt-3" id="ref-master-summary">
+                                                    Software Engineer eager to solve complex problems...
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-preview-card mt-4">
+                                                <h5>Work History Bullets</h5>
+                                                <div id="ref-master-experience-bullets" class="mt-2">
+                                                    <!-- Original experiences -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right: Tailored Outputs Area -->
+                                    <div class="tailor-pane pane-tailored">
+                                        <div class="pane-header">
+                                            <div class="pane-tabs">
+                                                <button class="pane-tab active" data-tailored-tab="resume">Tailored Resume</button>
+                                                <button class="pane-tab" data-tailored-tab="letter">Tailored Cover Letter</button>
+                                            </div>
+                                            <span class="badge badge-success"><i class="fa-solid fa-sparkles"></i> AI Tailored</span>
+                                        </div>
+
+                                        <div class="pane-content-scroll">
+                                            
+                                            <!-- TAB 1: TAILORED RESUME CONTENT -->
+                                            <div class="tailored-tab-pane active" id="pane-tailored-resume">
+                                                <div class="print-document" id="printable-resume">
+                                                    <div class="document-header">
+                                                        <h1 id="doc-res-name">Alex Carter</h1>
+                                                        <p id="doc-res-contact">alex.carter@email.com | +1 (555) 019-2834 | San Francisco, CA</p>
+                                                        <p id="doc-res-links">linkedin.com/in/alexcarter-dev | github.com/alexcarter-codes</p>
+                                                    </div>
+                                                    
+                                                    <div class="doc-section">
+                                                        <h2 class="doc-sec-title">Professional Summary</h2>
+                                                        <textarea id="tailored-summary-input" rows="5" class="doc-editor-textarea"></textarea>
+                                                    </div>
+
+                                                    <div class="doc-section mt-4">
+                                                        <h2 class="doc-sec-title">Skills</h2>
+                                                        <p id="doc-res-skills" class="doc-text-block">React, Python, Flask, JS, Databases, AWS, Git</p>
+                                                    </div>
+
+                                                    <div class="doc-section mt-4">
+                                                        <h2 class="doc-sec-title">Professional Experience</h2>
+                                                        <div id="doc-res-experience-container">
+                                                            <!-- Dynamic tailored experience inputs -->
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="doc-section mt-4">
+                                                        <h2 class="doc-sec-title">Projects</h2>
+                                                        <div id="doc-res-projects-container">
+                                                            <!-- Dynamic project blocks -->
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="doc-section mt-4">
+                                                        <h2 class="doc-sec-title">Education</h2>
+                                                        <div id="doc-res-education-container">
+                                                            <!-- Dynamic education blocks -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- TAB 2: TAILORED COVER LETTER CONTENT -->
+                                            <div class="tailored-tab-pane" id="pane-tailored-letter">
+                                                <div class="print-document" id="printable-letter">
+                                                    <div class="document-header text-left">
+                                                        <h1 id="doc-let-name">Alex Carter</h1>
+                                                        <p id="doc-let-contact">alex.carter@email.com | +1 (555) 019-2834</p>
+                                                        <hr class="doc-divider">
+                                                    </div>
+                                                    <textarea id="tailored-letter-input" rows="22" class="doc-editor-textarea mt-4"></textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 5. AUTOFILL SIMULATOR TAB -->
+                <section id="tab-autofill" class="tab-pane">
+                    <div class="autofill-grid">
+                        
+                        <!-- Left Panel: Job Portal Form Simulation -->
+                        <div class="portal-sim-pane">
+                            <div class="browser-header">
+                                <div class="browser-dots">
+                                    <span class="b-dot red"></span>
+                                    <span class="b-dot yellow"></span>
+                                    <span class="b-dot green"></span>
+                                </div>
+                                <div class="browser-address-bar">
+                                    <i class="fa-solid fa-lock text-success"></i>
+                                    <span>https://careers.company-portal.com/application/apply</span>
+                                </div>
+                            </div>
+                            
+                            <div class="portal-body">
+                                <div class="portal-form-header">
+                                    <h3>Submit Application</h3>
+                                    <p class="text-secondary">Please fill in details for the Software Engineer opportunity.</p>
+                                </div>
+                                <hr class="section-divider">
+
+                                <form id="mock-portal-form">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label>First Name</label>
+                                            <input type="text" id="sim-first-name" class="sim-input" placeholder="Enter first name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" id="sim-last-name" class="sim-input" placeholder="Enter last name">
+                                        </div>
+                                    </div>
+                                    <div class="form-grid mt-3">
+                                        <div class="form-group">
+                                            <label>Email Address</label>
+                                            <input type="email" id="sim-email" class="sim-input" placeholder="Enter email">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Phone Number</label>
+                                            <input type="text" id="sim-phone" class="sim-input" placeholder="Enter phone">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label>LinkedIn Profile URL</label>
+                                        <input type="url" id="sim-linkedin" class="sim-input" placeholder="https://linkedin.com/in/...">
+                                    </div>
+                                    
+                                    <div class="form-group mt-3">
+                                        <label>Tailored Resume PDF</label>
+                                        <div class="sim-file-upload" id="sim-resume-upload-box">
+                                            <i class="fa-regular fa-file-pdf"></i>
+                                            <span id="sim-resume-status">Drag and drop or upload file</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <label>Tailored Cover Letter</label>
+                                        <textarea id="sim-cover-letter-text" class="sim-input" rows="6" placeholder="Paste or upload cover letter details..."></textarea>
+                                    </div>
+
+                                    <button type="button" class="btn btn-secondary btn-full mt-4" style="cursor: not-allowed;">
+                                        Submit Application to Portal
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Autofill Extension Drawer Mockup -->
+                        <div class="extension-sim-pane">
+                            <div class="extension-widget-card">
+                                <div class="extension-header">
+                                    <div class="flex items-center">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-cyan mr-2"></i>
+                                        <span class="ext-title">ApplyAI Extension</span>
+                                    </div>
+                                    <span class="badge badge-success text-xs">V1.2 Active</span>
+                                </div>
+
+                                <div class="ext-body">
+                                    <div class="ext-alert-banner">
+                                        <i class="fa-solid fa-circle-info text-cyan"></i>
+                                        <div>
+                                            <strong>Portal Detected!</strong>
+                                            <p>We found open fields matching your tailored profile documents.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="ext-job-details mt-4">
+                                        <label>Active Tailored Job</label>
+                                        <div class="ext-job-pill">
+                                            <div class="ext-job-info">
+                                                <strong id="ext-job-title">Software Engineer</strong>
+                                                <span id="ext-job-company">InnovateTech Solutions</span>
+                                            </div>
+                                            <span class="ext-score" id="ext-job-score">88%</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="ext-autofill-preview mt-4">
+                                        <label>Form Auto-mapping</label>
+                                        <ul class="mapping-list">
+                                            <li><i class="fa-solid fa-circle-check text-success"></i> Name: <code>Alex Carter</code></li>
+                                            <li><i class="fa-solid fa-circle-check text-success"></i> Email/Phone: <code>alex.carter@email.com</code></li>
+                                            <li><i class="fa-solid fa-circle-check text-success"></i> Socials: <code>LinkedIn, GitHub</code></li>
+                                            <li><i class="fa-solid fa-circle-check text-success"></i> Resume: <code id="ext-resume-status">Ready (Tailored PDF)</code></li>
+                                            <li><i class="fa-solid fa-circle-check text-success"></i> Cover Letter: <code>Ready (Custom Text)</code></li>
+                                        </ul>
+                                    </div>
+
+                                    <button class="btn btn-primary btn-full mt-6 btn-pulse" id="btn-trigger-autofill-action">
+                                        <i class="fa-solid fa-circle-arrow-right"></i> Autofill Profile Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 6. INTERVIEW PREP TAB -->
+                <section id="tab-interview" class="tab-pane">
+                    <div class="interview-grid">
+                        
+                        <!-- Left Panel: Questions Selector -->
+                        <div class="interview-sidebar-pane">
+                            <div class="section-card">
+                                <h3>Interview Question Panel</h3>
+                                <p class="text-secondary mt-1">Practice responding to tailored questions generated from the job specification.</p>
+                                <hr class="section-divider">
+
+                                <div class="form-group">
+                                    <label for="prep-job-selector">Active Opportunity</label>
+                                    <select id="prep-job-selector" class="form-select">
+                                        <!-- Dynamic dropdown options from applications -->
+                                    </select>
+                                </div>
+
+                                <button class="btn btn-secondary btn-full mt-2" id="btn-generate-prep-questions">
+                                    <i class="fa-solid fa-arrows-rotate"></i> Generate Questions
+                                </button>
+
+                                <div class="questions-list mt-6" id="prep-questions-list">
+                                    <div class="empty-questions-state text-center py-6">
+                                        <i class="fa-solid fa-clipboard-question text-secondary text-2xl"></i>
+                                        <p class="text-secondary text-sm mt-2">Generate questions above or select an application.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Interview Simulation Sandbox -->
+                        <div class="interview-sandbox-pane">
+                            <!-- Sandbox Idle Screen -->
+                            <div class="empty-state-card" id="sandbox-idle">
+                                <div class="empty-state-icon">
+                                    <i class="fa-solid fa-microphone-lines"></i>
+                                </div>
+                                <h3>Interview Simulator Sandbox</h3>
+                                <p>Select an application on the left and choose a question to begin practicing. Our simulated speech-to-text analyzer evaluates your structure and keyword alignment.</p>
+                            </div>
+
+                            <!-- Sandbox Active Screen -->
+                            <div class="sandbox-active-card hidden" id="sandbox-active">
+                                <div class="sandbox-header">
+                                    <span class="badge badge-indigo" id="active-q-type">Technical</span>
+                                    <div class="webcam-status">
+                                        <span class="pulse-dot bg-red"></span>
+                                        <span>Cam Feed Active</span>
+                                    </div>
+                                </div>
+
+                                <!-- Webcam Mock Frame -->
+                                <div class="webcam-mock-frame mt-4">
+                                    <div class="webcam-overlay">
+                                        <i class="fa-solid fa-user-astronaut"></i>
+                                        <span>Practice environment recording...</span>
+                                    </div>
+                                </div>
+
+                                <div class="active-question-box mt-4">
+                                    <h4 class="text-cyan">Question:</h4>
+                                    <p class="font-medium mt-1" id="active-q-text">How do you optimize API latency when working with Flask?</p>
+                                </div>
+
+                                <div class="form-group mt-4">
+                                    <label for="interview-answer-input">Your Response (Type or dictate your answer)</label>
+                                    <textarea id="interview-answer-input" rows="8" placeholder="Start typing your response. Structure it with Situation, Task, Action, and Result (STAR)..." required></textarea>
+                                </div>
+
+                                <div class="sandbox-actions mt-4">
+                                    <button class="btn btn-secondary" id="btn-dictate-mock-answer">
+                                        <i class="fa-solid fa-microphone"></i> Dictate Answer
+                                    </button>
+                                    <button class="btn btn-primary" id="btn-submit-answer-feedback">
+                                        <i class="fa-solid fa-clipboard-check"></i> Evaluate Answer
+                                    </button>
+                                </div>
+
+                                <!-- AI Evaluation Output -->
+                                <div class="evaluation-card mt-6 hidden" id="interview-eval-card">
+                                    <div class="eval-header">
+                                        <h4 class="text-success"><i class="fa-solid fa-circle-nodes"></i> Response Analysis</h4>
+                                        <div class="eval-score" id="eval-score-grade">85%</div>
+                                    </div>
+                                    <hr class="section-divider">
+                                    
+                                    <div class="eval-body">
+                                        <h5>Constructive Critique:</h5>
+                                        <p class="text-sm mt-1" id="eval-critique-text">Good structure. Highlight details regarding API structures.</p>
+                                        
+                                        <h5 class="mt-4 text-cyan">Strong STAR Model Response Example:</h5>
+                                        <p class="text-sm mt-1 font-mono italic" id="eval-suggested-text">Suggested template response details...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL FOR MANUAL APPLICATION ADDITION -->
+    <div class="modal-overlay hidden" id="modal-add-app">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Add New Job Opportunity</h3>
+                <button class="btn-close-modal" id="btn-close-app-modal">&times;</button>
+            </div>
+            <form id="form-manual-app">
+                <div class="form-group">
+                    <label for="modal-company">Company Name *</label>
+                    <input type="text" id="modal-company" placeholder="e.g. Acme Corp" required>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="modal-role">Job Title *</label>
+                    <input type="text" id="modal-role" placeholder="e.g. Software Engineer" required>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="modal-url">Job Post URL</label>
+                    <input type="url" id="modal-url" placeholder="https://careers.acme.com/jobs/...">
+                </div>
+                <div class="form-grid mt-3">
+                    <div class="form-group">
+                        <label for="modal-status">Pipeline Status</label>
+                        <select id="modal-status" class="form-select">
+                            <option value="Discovered">Discovered</option>
+                            <option value="Tailored">Tailored</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Interviewing">Interviewing</option>
+                            <option value="Offer">Offer</option>
+                            <option value="Rejected">Archived</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-score">Current Match Score (%)</label>
+                        <input type="number" id="modal-score" min="0" max="100" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="modal-notes">Application Notes</label>
+                    <textarea id="modal-notes" rows="4" placeholder="Enter notes or updates..."></textarea>
+                </div>
+                
+                <div class="modal-footer mt-6">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-app-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Opportunity</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- API Client JS -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

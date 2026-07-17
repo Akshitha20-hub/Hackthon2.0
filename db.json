@@ -1,0 +1,152 @@
+{
+  "profile": {
+    "education": [
+      {
+        "degree": "Bachelor of Science",
+        "school": "State University",
+        "field": "Computer Science",
+        "start_year": "2020",
+        "end_year": "2024",
+        "grade": "3.8 GPA"
+      }
+    ],
+    "experience": [
+      {
+        "id": "exp_1",
+        "title": "Software Engineer",
+        "company": "Tech Solutions",
+        "location": "Remote",
+        "start_date": "2024-01",
+        "end_date": "Present",
+        "description": "B.Tech Data Science undergraduate (CGPA 8.0) with hands-on experience in Python, SQL, ML, and full-stack web development. Skilled in data preprocessing,",
+        "skills": [
+          "HTML5/CSS3",
+          "Python",
+          "Flask"
+        ]
+      }
+    ],
+    "personal": {
+      "name": "CHETLA AKSHITHA",
+      "email": "akshithachetla9@gmail.com",
+      "phone": "+91 9392502856",
+      "linkedin": "https://linkedin.com/in/akshithachetla20",
+      "github": "https://github.com/Akshitha20-hub",
+      "website": ""
+    },
+    "preferences": {
+      "titles": [
+        "Software Engineer"
+      ],
+      "min_salary": "$85,000",
+      "locations": [
+        "Remote",
+        "Hybrid"
+      ],
+      "work_modes": [
+        "Remote",
+        "Hybrid"
+      ]
+    },
+    "projects": [
+      {
+        "id": "proj_1",
+        "title": "TaskFlow Web App",
+        "role": "Lead Architect",
+        "link": "https://github.com/",
+        "description": "Designed and deployed a responsive job task tracking portal with custom components and background triggers.",
+        "technologies": [
+          "HTML5/CSS3",
+          "Python",
+          "Flask"
+        ]
+      }
+    ],
+    "skills": {
+      "backend": [
+        "Python",
+        "Flask"
+      ],
+      "databases": [
+        "MySQL"
+      ],
+      "frontend": [
+        "HTML5/CSS3"
+      ],
+      "tools": [
+        "Git"
+      ]
+    }
+  },
+  "applications": [
+    {
+      "id": "app_001",
+      "company": "InnovateTech Solutions",
+      "role": "Associate Software Engineer",
+      "url": "https://innovatetech.careers/jobs/102",
+      "status": "Interviewing",
+      "match_score": 88,
+      "date_created": "2026-07-10",
+      "date_applied": "2026-07-12",
+      "notes": "Had a recruiter call. Technical screen scheduled for July 20th. Focus on React hook mechanics and Flask API design.",
+      "tailored_resume": {
+        "summary": "Enthusiastic and results-oriented Software Engineer with experience developing interactive web applications using React, Python, and Flask. Proven track record of optimizing system response latency by 15% and deploying reliable full-stack tools. Eager to bring clean coding standards and modern development workflows to the Associate Software Engineer position at InnovateTech Solutions.",
+        "experience": [
+          {
+            "id": "exp_1",
+            "title": "Junior Full Stack Developer",
+            "company": "PixelCraft Studio",
+            "description": "Collaborated with senior engineers to design and implement client-side interactive modules using React and styled components. Optimized API requests in the Flask backend, resulting in a 15% reduction in page load latency. Developed clean integration structures and modern dashboard pipelines."
+          }
+        ]
+      },
+      "tailored_cover_letter": "Dear Hiring Manager,\n\nI am writing to express my strong interest in the Associate Software Engineer position at InnovateTech Solutions. As a developer with hands-on experience building full-stack applications with React, Python, and Flask, I am thrilled by the opportunity to contribute to your engineering team.\n\nAt PixelCraft Studio, I collaborated with senior engineers to deliver highly-performant UI modules and optimized backend APIs, improving loading speeds by 15%. I also designed and deployed collaborative tools like TaskFlow Pro, which leverages PostgreSQL and Redis to handle complex client interactions.\n\nInnovateTech's focus on scalable systems aligns perfectly with my background. I look forward to discussing how my skills in React, Python, and database systems can support your goals.\n\nSincerely,\nAlex Carter"
+    },
+    {
+      "id": "app_002",
+      "company": "Global Data Corp",
+      "role": "Junior Full Stack Engineer",
+      "url": "https://globaldata.com/careers/fullstack-jr",
+      "status": "Tailored",
+      "match_score": 75,
+      "date_created": "2026-07-15",
+      "date_applied": null,
+      "notes": "Tailored resume and cover letter generated. Need to review skills list before submitting application.",
+      "tailored_resume": {
+        "summary": "Detail-oriented and results-driven Software Engineer with a strong foundation in REST APIs, Python, React and full-stack development. Demonstrated success in building scalable services and optimizing performance. Proven ability to collaborate in fast-paced environments to deliver robust web architectures. Eager to leverage hands-on engineering experience and problem-solving skills to drive development initiatives as a Junior Full Stack Engineer at Global Data Corp.",
+        "experience": [
+          {
+            "id": "exp_1",
+            "title": "Software Engineer",
+            "company": "Tech Solutions",
+            "description": "B.Tech Data Science undergraduate (CGPA 8.0) with hands-on experience in Python, SQL, ML, and full-stack web development. Skilled in data preprocessing,"
+          }
+        ]
+      },
+      "tailored_cover_letter": "Dear Hiring Team at Global Data Corp,\n\nI am writing to express my strong interest in the Junior Full Stack Engineer position. With my background in full-stack software development and my proficiency in REST APIs, Python, React, I am confident in my ability to make an immediate impact on your engineering division.\n\nMy technical expertise is highlighted by my project, TaskFlow Web App, which I developed using HTML5/CSS3, Python, Flask. Through this project, I resolved complex architectural requirements such as data persistence, asynchronous tasks, and real-time dashboard notifications. During my time at Tech Solutions, I gained direct exposure to software engineering lifecycles and collaborated with senior engineers to implement client-focused solutions.\n\nWhat excites me most about joining Global Data Corp is your commitment to technical innovation and developer excellence. I am eager to align my engineering skills with your team's goals and contribute to writing clean, maintainable, and scalable code.\n\nThank you for your time and consideration. I welcome the opportunity to discuss my qualifications further in an interview.\n\nSincerely,\nCHETLA AKSHITHA"
+    },
+    {
+      "id": "app_972e164e",
+      "company": "wipro",
+      "role": "data analyst",
+      "url": "",
+      "status": "Interviewing",
+      "match_score": 75,
+      "date_created": "2026-07-17",
+      "date_applied": null,
+      "notes": "",
+      "tailored_resume": {
+        "summary": "Detail-oriented and results-driven Software Engineer with a strong foundation in React, Python, Flask and full-stack development. Demonstrated success in building scalable services and optimizing performance. Proven ability to collaborate in fast-paced environments to deliver robust web architectures. Eager to leverage hands-on engineering experience and problem-solving skills to drive development initiatives as a data analyst at wipro.",
+        "experience": [
+          {
+            "id": "exp_1",
+            "title": "Software Engineer",
+            "company": "Tech Solutions",
+            "description": "B.Tech Data Science undergraduate (CGPA 8.0) with hands-on experience in Python, SQL, ML, and full-stack web development. Skilled in data preprocessing,"
+          }
+        ]
+      },
+      "tailored_cover_letter": "Dear Hiring Team at wipro,\n\nI am writing to express my strong interest in the data analyst position. With my background in full-stack software development and my proficiency in React, Python, Flask, REST APIs, I am confident in my ability to make an immediate impact on your engineering division.\n\nMy technical expertise is highlighted by my project, TaskFlow Web App, which I developed using HTML5/CSS3, Python, Flask. Through this project, I resolved complex architectural requirements such as data persistence, asynchronous tasks, and real-time dashboard notifications. During my time at Tech Solutions, I gained direct exposure to software engineering lifecycles and collaborated with senior engineers to implement client-focused solutions.\n\nWhat excites me most about joining wipro is your commitment to technical innovation and developer excellence. I am eager to align my engineering skills with your team's goals and contribute to writing clean, maintainable, and scalable code.\n\nThank you for your time and consideration. I welcome the opportunity to discuss my qualifications further in an interview.\n\nSincerely,\nCHETLA AKSHITHA"
+    }
+  ]
+}
