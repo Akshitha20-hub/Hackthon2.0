@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apex Hub | Smart Campus Twin, Events & Crime Safety Dashboard</title>
+    <meta name="description" content="Apex Hub integrates a Smart Campus Digital Twin, GatherGo Event Discovery, and a Crime Safety Radar into a unified, high-fidelity monitoring portal." />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Leaflet Map CSS -->
+    <link 
+      rel="stylesheet" 
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+      crossorigin="" 
+    />
+    <!-- FontAwesome Icons -->
+    <link 
+      rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+    />
+  </head>
+  <body class="dark-theme">
+
+    <!-- APEX SYSTEM SHELL LAYOUT -->
+    <div class="apex-shell">
+      
+      <!-- Global Left Navigation Sidebar -->
+      <aside class="apex-sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-logo">
+            <i class="fa-solid fa-compass-drafting brand-logo-glow"></i>
+          </div>
+          <h2>Apex<span>Hub</span></h2>
+        </div>
+        
+        <nav class="sidebar-menu">
+          <button class="menu-item active" id="menu-btn-campus" aria-label="Load Smart Campus Twin Dashboard">
+            <i class="fa-solid fa-building-circle-check"></i>
+            <span>Campus Twin</span>
+            <span class="menu-glow"></span>
+          </button>
+          <button class="menu-item" id="menu-btn-events" aria-label="Load GatherGo Event Management Platform">
+            <i class="fa-solid fa-ticket"></i>
+            <span>Event Explorer</span>
+            <span class="menu-glow"></span>
+          </button>
+          <button class="menu-item" id="menu-btn-safety" aria-label="Load Crime Safety Radar Dashboard">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Safety Radar</span>
+            <span class="menu-glow"></span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-profile">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Operator Avatar" />
+            <div class="user-info">
+              <span class="user-name">Operator #20</span>
+              <span class="user-role">System Admin</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Contents Area -->
+      <div class="apex-main">
+        
+        <!-- Header Widgets (Weather, Sim Time, Global Search) -->
+        <header class="apex-header">
+          <div class="header-breadcrumbs">
+            <span id="breadcrumb-app-name">Campus Digital Twin</span>
+            <span class="breadcrumb-separator">/</span>
+            <span id="breadcrumb-sub-name" class="active">Monitoring Station</span>
+          </div>
+
+          <div class="header-widgets">
+            <!-- Sim Controls (Campus Twin tab only) -->
+            <div class="header-widget-group" id="header-sim-widgets">
+              <div class="weather-widget">
+                <i class="fa-solid fa-sun" id="weather-icon" style="color: var(--warning);"></i>
+                <span id="weather-status">Sunny</span>
+                <span class="temp-badge" id="outdoor-weather-temp">24.5°C</span>
+              </div>
+              <div class="time-widget">
+                <i class="fa-solid fa-clock-pulse"></i>
+                <span id="time-display">08:00:00 AM</span>
+              </div>
+              <div class="speed-control">
+                <button class="btn-icon active" id="btn-play-pause" title="Play/Pause Simulation">
+                  <i class="fa-solid fa-pause" id="play-pause-icon"></i>
+                </button>
+                <select class="speed-select" id="select-speed" title="Simulation Speed">
+                  <option value="60">60x (1m/s)</option>
+                  <option value="240" selected>240x (4m/s)</option>
+                  <option value="600">600x (10m/s)</option>
+                  <option value="1200">1200x (20m/s)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Global Search and Badge alerts (Events tab only) -->
+            <div class="header-widget-group" id="header-events-widgets" style="display: none;">
+              <button class="btn-secondary nav-action-btn" id="btn-my-favs" aria-label="Saved Favorite Events">
+                <i class="fa-solid fa-heart text-pink"></i> Favorites <span class="badge" id="bookmarks-badge">0</span>
+              </button>
+              <button class="btn-secondary nav-action-btn" id="btn-my-tickets" aria-label="Purchased gate tickets">
+                <i class="fa-solid fa-passport text-cyan"></i> My Tickets <span class="badge" id="tickets-badge">0</span>
+              </button>
+              <button class="btn-primary nav-action-btn" id="btn-my-creator" aria-label="Open event host page">
+                <i class="fa-solid fa-circle-plus"></i> Host Portal
+              </button>
+            </div>
+
+            <!-- Emergency SOS Panic Button (Safety tab only) -->
+            <div class="header-widget-group" id="header-safety-widgets" style="display: none;">
+              <button class="btn-danger" id="btn-panic-sos">
+                <i class="fa-solid fa-circle-exclamation animate-ping"></i> EMERGENCY PANIC
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Dynamic Content Grid -->
+        <div class="apex-content-grid">
+          
+          <!-- LEFT SECTION (COLUMN 1) -->
+          <section class="grid-col left-col">
+            
+            <!-- APP 1: CAMPUS TWIN LEFT PANELS -->
+            <div id="panel-campus-left" class="app-sub-panel active">
+              <!-- Alerts incidents log -->
+              <div class="panel alert-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-triangle-exclamation text-yellow"></i> Incident Warning Log</h3>
+                  <button class="btn-text" id="btn-trigger-anomaly">Simulate Warning</button>
+                </div>
+                <div class="alerts-list" id="alerts-list">
+                  <!-- Loaded dynamically -->
+                </div>
+              </div>
+              
+              <!-- Energy Sync line chart -->
+              <div class="panel chart-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-chart-line text-cyan"></i> Power Grid Synchronization</h3>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="campus-energy-chart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- APP 2: EVENTS EXPLORER LEFT PANELS -->
+            <div id="panel-events-left" class="app-sub-panel">
+              <div class="panel filters-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-sliders text-purple"></i> Event Filters</h3>
+                  <button class="btn-text" id="btn-clear-event-filters">Reset All</button>
+                </div>
+                
+                <div class="filter-group">
+                  <label for="event-search-input" class="filter-title">Keyword Search</label>
+                  <div class="input-search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="event-search-input" placeholder="Concert, summit..." />
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <label class="filter-title">Categories</label>
+                  <div class="category-tabs" id="event-categories-container">
+                    <button class="category-tab active" data-category="All">All Categories</button>
+                    <button class="category-tab" data-category="Concerts">Concerts</button>
+                    <button class="category-tab" data-category="Tech">Tech</button>
+                    <button class="category-tab" data-category="Arts">Arts</button>
+                    <button class="category-tab" data-category="Sports">Sports</button>
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <label class="filter-title">Price Range</label>
+                  <div class="price-range-wrapper">
+                    <div class="price-labels">
+                      <span>$0</span>
+                      <span id="event-price-limit-lbl">$500</span>
+                    </div>
+                    <input type="range" id="event-price-slider" min="0" max="500" step="10" value="500" />
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <label for="event-date-filter" class="filter-title">Date Limit</label>
+                  <input type="date" id="event-date-filter" class="date-picker-input" />
+                </div>
+
+                <div class="filter-group">
+                  <label for="event-sort-select" class="filter-title">Sort Criteria</label>
+                  <select id="event-sort-select" class="select-input">
+                    <option value="popularity">Popularity (Stars)</option>
+                    <option value="date-asc">Date (Soonest)</option>
+                    <option value="price-asc">Price (Low to High)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- APP 3: SAFETY RADAR LEFT PANELS -->
+            <div id="panel-safety-left" class="app-sub-panel">
+              <!-- Safety Filters -->
+              <div class="panel filters-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-sliders text-cyan"></i> Safety Filters</h3>
+                </div>
+                <div class="filter-group">
+                  <label class="filter-title font-small">Incident Crime Categories</label>
+                  <div class="category-tabs" id="safety-categories-container">
+                    <button class="category-tab active" data-category="All">All Categories</button>
+                    <button class="category-tab" data-category="Theft">Theft</button>
+                    <button class="category-tab" data-category="Vandalism">Vandalism</button>
+                    <button class="category-tab" data-category="Assault">Assault</button>
+                    <button class="category-tab" data-category="Suspicious">Suspicious</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Report Incident Form -->
+              <div class="panel report-crime-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-bullhorn text-pink"></i> Report Campus Hazard</h3>
+                </div>
+                <form id="report-incident-form" class="crime-report-form">
+                  <div class="form-control">
+                    <label for="crime-form-title">Incident Title *</label>
+                    <input type="text" id="crime-form-title" placeholder="Suspicious bag, broken lock..." required />
+                  </div>
+                  <div class="form-row">
+                    <div class="form-control">
+                      <label for="crime-form-category">Category *</label>
+                      <select id="crime-form-category" required>
+                        <option value="Theft">Theft</option>
+                        <option value="Vandalism">Vandalism</option>
+                        <option value="Assault">Assault</option>
+                        <option value="Suspicious">Suspicious</option>
+                      </select>
+                    </div>
+                    <div class="form-control">
+                      <label for="crime-form-threat">Threat Level *</label>
+                      <select id="crime-form-threat" required>
+                        <option value="low">Low (Alert)</option>
+                        <option value="medium" selected>Medium (Action)</option>
+                        <option value="high">High (Danger)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-control">
+                      <label for="crime-form-lat">Latitude Pin *</label>
+                      <input type="number" id="crime-form-lat" step="0.0001" value="37.4275" required />
+                    </div>
+                    <div class="form-control">
+                      <label for="crime-form-lng">Longitude Pin *</label>
+                      <input type="number" id="crime-form-lng" step="0.0001" value="-122.1697" required />
+                    </div>
+                  </div>
+                  <div class="form-control">
+                    <label for="crime-form-desc">Incident details *</label>
+                    <textarea id="crime-form-desc" rows="2" placeholder="Briefly describe what happened..." required></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Incident Report
+                  </button>
+                </form>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- MIDDLE SECTION (SHARED MAP PANEL - COLUMN 2) -->
+          <section class="grid-col map-col">
+            <div class="panel map-panel-container">
+              
+              <!-- Map Overlays controllers (depends on active route) -->
+              <div class="map-layer-controls">
+                <!-- Campus overlays -->
+                <div class="layer-control-group" id="map-controls-campus">
+                  <button class="map-btn" id="btn-map-heatmap">
+                    <i class="fa-solid fa-fire"></i> Occupancy Heatmap
+                  </button>
+                  <button class="map-btn" id="btn-map-wifi">
+                    <i class="fa-solid fa-wifi"></i> Wi-Fi Grid
+                  </button>
+                </div>
+                <!-- Events overlays -->
+                <div class="layer-control-group" id="map-controls-events" style="display: none;">
+                  <span class="map-badge"><i class="fa-solid fa-location-crosshairs text-purple"></i> Event Venues Active</span>
+                </div>
+                <!-- Safety overlays -->
+                <div class="layer-control-group" id="map-controls-safety" style="display: none;">
+                  <button class="map-btn" id="btn-map-safepaths">
+                    <i class="fa-solid fa-route"></i> Lit Escort Routes
+                  </button>
+                </div>
+                
+                <button class="map-btn-recenter" id="btn-map-recenter" title="Recenter View">
+                  <i class="fa-solid fa-arrows-to-eye"></i>
+                </button>
+              </div>
+
+              <!-- Shared Leaflet Map Node -->
+              <div id="leaflet-map-shared"></div>
+
+              <!-- Map Legend overlays -->
+              <div class="map-legend-overlay">
+                <div class="legend-header" id="map-legend-title">Campus State</div>
+                <div class="legend-body" id="map-legend-items">
+                  <!-- campus default -->
+                  <div class="legend-row">
+                    <span class="legend-color" style="background: rgba(0, 240, 255, 0.4); border-color: var(--neon-cyan);"></span>
+                    <span>Nominal Node</span>
+                  </div>
+                  <div class="legend-row">
+                    <span class="legend-color" style="background: rgba(255, 183, 0, 0.4); border-color: var(--warning);"></span>
+                    <span>Incident warning</span>
+                  </div>
+                  <div class="legend-row">
+                    <span class="legend-color" style="background: rgba(255, 59, 48, 0.4); border-color: var(--danger);"></span>
+                    <span>Critical anomaly</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- RIGHT SECTION (COLUMN 3) -->
+          <section class="grid-col right-col">
+
+            <!-- APP 1: CAMPUS TWIN RIGHT PANELS -->
+            <div id="panel-campus-right" class="app-sub-panel active">
+              <!-- Building Telemetry Twin -->
+              <div class="panel telemetry-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-server text-cyan"></i> Building Twin Telemetry</h3>
+                  <span class="badge-type academic" id="lbl-bld-type">academic</span>
+                </div>
+                <div class="telemetry-details">
+                  <h4 id="lbl-bld-name">Science Hall</h4>
+                  <p id="lbl-bld-desc" class="desc-text-small">Loading building specifications...</p>
+                  
+                  <div class="sensor-readout-grid">
+                    <div class="sensor-card">
+                      <span class="sensor-lbl"><i class="fa-solid fa-thermometer"></i> Temperature</span>
+                      <span class="sensor-val" id="lbl-sensor-temp">22.0°C</span>
+                    </div>
+                    <div class="sensor-card">
+                      <span class="sensor-lbl"><i class="fa-solid fa-droplet"></i> Humidity</span>
+                      <span class="sensor-val" id="lbl-sensor-humidity">45%</span>
+                    </div>
+                    <div class="sensor-card">
+                      <span class="sensor-lbl"><i class="fa-solid fa-wind"></i> AQI (Air)</span>
+                      <span class="sensor-val" id="lbl-sensor-aqi">22</span>
+                    </div>
+                    <div class="sensor-card">
+                      <span class="sensor-lbl"><i class="fa-solid fa-wifi"></i> Active Wi-Fi</span>
+                      <span class="sensor-val" id="lbl-sensor-wifi">120 users</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- IoT Telemetry controllers -->
+                <div class="iot-sliders-group">
+                  <h4><i class="fa-solid fa-sliders text-purple"></i> Remote IoT Overrides</h4>
+                  
+                  <div class="control-row">
+                    <div class="control-header">
+                      <span>Thermostat HVAC</span>
+                      <strong id="lbl-slider-hvac">22.0°C</strong>
+                    </div>
+                    <input type="range" id="slider-hvac" min="16" max="28" step="0.5" value="22" />
+                  </div>
+
+                  <div class="control-row">
+                    <div class="control-header">
+                      <span>LED Light Dimmer</span>
+                      <strong id="lbl-slider-lights">70%</strong>
+                    </div>
+                    <input type="range" id="slider-lights" min="0" max="100" step="5" value="70" />
+                  </div>
+
+                  <div class="control-row">
+                    <span class="control-title-small">Mechanical Fan Ventilation</span>
+                    <div class="toggle-group-buttons">
+                      <button class="toggle-btn" data-mode="off">Off</button>
+                      <button class="toggle-btn active" data-mode="low">Low</button>
+                      <button class="toggle-btn" data-mode="high">High</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Telemetry MQTT Logger console -->
+              <div class="panel console-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-terminal text-green"></i> MQTT Broker Message Stream</h3>
+                </div>
+                <div class="terminal-body" id="campus-mqtt-logs">
+                  <!-- Streams logs -->
+                </div>
+              </div>
+            </div>
+
+            <!-- APP 2: EVENTS EXPLORER RIGHT PANELS -->
+            <div id="panel-events-right" class="app-sub-panel">
+              <!-- Featured Hero countdown banner -->
+              <div class="panel featured-event-timer-card">
+                <div class="featured-image-wrapper">
+                  <div class="featured-overlay"></div>
+                  <div class="featured-label"><i class="fa-solid fa-star animate-pulse"></i> FEATURED EVENT</div>
+                  <h4 id="featured-title">ElectroWave Summer Festival</h4>
+                  <p id="featured-venue">Starlight Amphitheater, LA</p>
+                </div>
+                <div class="featured-body">
+                  <!-- Mini countdown -->
+                  <div class="featured-countdown">
+                    <div class="timer-box">
+                      <span id="lbl-days">00</span>
+                      <span class="box-sub">Days</span>
+                    </div>
+                    <div class="timer-box">
+                      <span id="lbl-hours">00</span>
+                      <span class="box-sub">Hours</span>
+                    </div>
+                    <div class="timer-box">
+                      <span id="lbl-mins">00</span>
+                      <span class="box-sub">Mins</span>
+                    </div>
+                    <div class="timer-box">
+                      <span id="lbl-secs">00</span>
+                      <span class="box-sub">Secs</span>
+                    </div>
+                  </div>
+                  <div class="featured-actions">
+                    <button class="btn btn-primary btn-full" id="btn-featured-book-now">
+                      <i class="fa-solid fa-ticket"></i> Book VIP Tickets
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- List Grid scroll -->
+              <div class="panel list-panel flex-grow-container">
+                <div class="panel-header">
+                  <h3 id="lbl-events-count">5 Events Available</h3>
+                </div>
+                <div class="events-vertical-list" id="events-list-container">
+                  <!-- Loaded dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- APP 3: SAFETY RADAR RIGHT PANELS -->
+            <div id="panel-safety-right" class="app-sub-panel">
+              <!-- Safety prediction chart -->
+              <div class="panel chart-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-chart-line text-pink"></i> Predictive Crime Frequency Trend</h3>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="safety-prediction-chart"></canvas>
+                </div>
+              </div>
+
+              <!-- Real-time reported logs list -->
+              <div class="panel safety-logs-panel">
+                <div class="panel-header">
+                  <h3><i class="fa-solid fa-shield-halved text-cyan"></i> Active Safety Incidents</h3>
+                </div>
+                <div class="safety-incidents-list" id="safety-incidents-list">
+                  <!-- Loaded dynamically -->
+                </div>
+              </div>
+
+              <!-- Emergency Helpline Dialers -->
+              <div class="panel helpline-panel">
+                <h3><i class="fa-solid fa-phone-flip text-red"></i> Emergency Call Station</h3>
+                <div class="helpline-grid">
+                  <a href="tel:911" class="helpline-card danger">
+                    <span class="help-title">Emergency Police</span>
+                    <strong class="help-phone">911</strong>
+                  </a>
+                  <a href="tel:5550199" class="helpline-card warning">
+                    <span class="help-title">Campus Security</span>
+                    <strong class="help-phone">555-0199</strong>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </section>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- PERSISTENT SUB-VIEW MODALS -->
+
+    <!-- SUB-VIEW: EVENTS BOOKMARKS SHELF VIEW (MODAL OVERLAY) -->
+    <div class="modal-backdrop" id="modal-favorites-overlay">
+      <div class="modal-card modal-large">
+        <button class="close-modal-btn" id="btn-close-favs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-header">
+          <h2><i class="fa-solid fa-heart text-pink"></i> Saved Event Favorites</h2>
+          <p>Book tickets directly for your saved upcoming events.</p>
+        </div>
+        <div class="modal-body">
+          <div class="events-vertical-list" id="favorites-list-container">
+            <!-- Dynamic bookmarks -->
+          </div>
+          <div class="empty-state-message" id="favorites-empty-state" style="display: none;">
+            <i class="fa-solid fa-heart-crack"></i>
+            <p>You haven't saved any events yet.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUB-VIEW: CREATOR PORTAL VIEW (MODAL OVERLAY) -->
+    <div class="modal-backdrop" id="modal-creator-overlay">
+      <div class="modal-card modal-large creator-portal-modal">
+        <button class="close-modal-btn" id="btn-close-creator">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-header">
+          <h2><i class="fa-solid fa-circle-plus text-purple"></i> Event Hosting Dashboard</h2>
+          <p>Host new events, view ticket registration tallies, and evaluate revenue graphs.</p>
+        </div>
+        <div class="modal-body creator-dashboard-grid-layout">
+          
+          <!-- Left: New Event form -->
+          <div class="creator-left-form">
+            <h4>Host New Event Form</h4>
+            <form id="creator-event-form" class="creator-form">
+              <div class="form-row">
+                <div class="form-control">
+                  <label for="form-title">Event Title *</label>
+                  <input type="text" id="form-title" placeholder="e.g. Electric Concert" required />
+                </div>
+                <div class="form-control">
+                  <label for="form-category">Category *</label>
+                  <select id="form-category" required>
+                    <option value="Concerts">Concerts</option>
+                    <option value="Tech">Tech</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Sports">Sports</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-control">
+                  <label for="form-date">Date *</label>
+                  <input type="date" id="form-date" required />
+                </div>
+                <div class="form-control">
+                  <label for="form-time">Start Time *</label>
+                  <input type="time" id="form-time" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-control">
+                  <label for="form-venue">Venue Name *</label>
+                  <input type="text" id="form-venue" placeholder="e.g. Science Hall Aud, Stanford" required />
+                </div>
+                <div class="form-control">
+                  <label>Coordinates *</label>
+                  <div class="coordinate-inputs">
+                    <input type="number" id="form-lat" step="0.0001" min="-90" max="90" placeholder="Lat (37.42)" required />
+                    <input type="number" id="form-lng" step="0.0001" min="-180" max="180" placeholder="Lng (-122.16)" required />
+                  </div>
+                </div>
+              </div>
+              <div class="form-control">
+                <label for="form-desc">Description *</label>
+                <textarea id="form-desc" rows="2" placeholder="Provide schedule, speakers, guideline details..." required></textarea>
+              </div>
+              <div class="form-row">
+                <div class="form-control">
+                  <label for="form-banner">Banner Image URL</label>
+                  <input type="url" id="form-banner" placeholder="https://images.unsplash.com/... (optional)" />
+                </div>
+                <div class="form-control">
+                  <label for="form-organizer">Organizer Name *</label>
+                  <input type="text" id="form-organizer" placeholder="e.g. Stanford Arts" required />
+                </div>
+              </div>
+              
+              <!-- Tiers Config -->
+              <div class="tiers-config-section">
+                <h5>Ticket Tier Pricing & Capacity</h5>
+                <div class="tier-config-row">
+                  <div class="tier-cell">
+                    <span>General</span>
+                    <input type="number" id="form-price-gen" min="0" placeholder="Price ($)" required />
+                    <input type="number" id="form-cap-gen" min="1" placeholder="Capacity" required />
+                  </div>
+                  <div class="tier-cell">
+                    <span>VIP</span>
+                    <input type="number" id="form-price-vip" min="0" placeholder="Price ($)" required />
+                    <input type="number" id="form-cap-vip" min="1" placeholder="Capacity" required />
+                  </div>
+                </div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary btn-full">Publish Event</button>
+            </form>
+          </div>
+
+          <!-- Right: Analytics KPI and charts -->
+          <div class="creator-right-analytics">
+            <div class="creator-kpi-row">
+              <div class="kpi-card">
+                <span class="kpi-lbl">Hosted Events</span>
+                <strong id="creator-kpi-events">5</strong>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-lbl">Tickets Sold</span>
+                <strong id="creator-kpi-tickets">4,520</strong>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-lbl">Net Revenue</span>
+                <strong id="creator-kpi-revenue">$152,400</strong>
+              </div>
+            </div>
+
+            <!-- Creator charts -->
+            <div class="creator-charts-row">
+              <div class="chart-mini-card">
+                <h5>Tickets Sold Per Event</h5>
+                <div class="chart-mini-wrapper">
+                  <canvas id="creator-sales-chart"></canvas>
+                </div>
+              </div>
+              <div class="chart-mini-card">
+                <h5>Category Revenue Tally</h5>
+                <div class="chart-mini-wrapper">
+                  <canvas id="creator-revenue-chart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manage list table -->
+            <div class="my-events-table-wrapper">
+              <h5>Published Events List</h5>
+              <div class="table-container">
+                <table class="events-table">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Tickets Sold</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="creator-table-body">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- SUB-VIEW: EVENTS PURCHASED TICKETS LIST (MODAL OVERLAY) -->
+    <div class="modal-backdrop" id="modal-tickets-overlay">
+      <div class="modal-card modal-large">
+        <button class="close-modal-btn" id="btn-close-tickets">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-header">
+          <h2><i class="fa-solid fa-passport text-cyan"></i> Your Purchased Event Passes</h2>
+          <p>Present the barcodes below to the gate scanners on arrival.</p>
+        </div>
+        <div class="modal-body">
+          <div class="tickets-passes-grid-layout" id="tickets-passes-container">
+            <!-- Dynamic SVG passes -->
+          </div>
+          <div class="empty-state-message" id="tickets-empty-state" style="display: none;">
+            <i class="fa-solid fa-ticket-simple"></i>
+            <p>You have not booked any event gate passes yet.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STICKY SIDE EVENT DETAILS VIEW DRAWER -->
+    <div class="details-drawer-backdrop" id="event-drawer-overlay">
+      <div class="details-drawer" id="event-drawer">
+        <button class="close-drawer-btn" id="btn-close-event-drawer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="drawer-banner-image-container">
+          <img id="drawer-banner-img" src="" alt="Event Banner" />
+          <span class="drawer-category-badge" id="drawer-category-lbl">Concert</span>
+        </div>
+
+        <div class="drawer-scrollable-body">
+          <div class="drawer-title-row">
+            <h2 id="drawer-event-title">ElectroWave Summer Festival 2026</h2>
+            <button class="drawer-icon-action-btn" id="btn-drawer-fav-toggle">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+          </div>
+
+          <div class="organizer-info-row">
+            <span>Hosted by <strong id="drawer-organizer-lbl">Pulse Entertainment</strong></span>
+            <span class="rating-badge"><i class="fa-solid fa-star"></i> <span id="drawer-popularity-lbl">9.8</span>/10 rating</span>
+          </div>
+
+          <div class="drawer-kpi-row">
+            <div class="drawer-kpi">
+              <i class="fa-solid fa-calendar"></i>
+              <div>
+                <span>DATE</span>
+                <strong id="drawer-date-lbl">August 15, 2026</strong>
+              </div>
+            </div>
+            <div class="drawer-kpi">
+              <i class="fa-solid fa-clock"></i>
+              <div>
+                <span>TIME</span>
+                <strong id="drawer-time-lbl">18:00 (PM)</strong>
+              </div>
+            </div>
+            <div class="drawer-kpi">
+              <i class="fa-solid fa-wallet"></i>
+              <div>
+                <span>TICKETS FROM</span>
+                <strong id="drawer-minprice-lbl">$65.00</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="drawer-section">
+            <h3>About the Event</h3>
+            <p id="drawer-desc-lbl">Detailed descriptions will load here...</p>
+          </div>
+
+          <div class="drawer-section">
+            <h3><i class="fa-solid fa-route"></i> Event Schedule</h3>
+            <div class="timeline" id="drawer-itinerary-timeline">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+          <div class="drawer-section">
+            <h3><i class="fa-solid fa-user-astronaut"></i> Lineup & Speakers</h3>
+            <div class="performers-row" id="drawer-performers-row">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer-footer-actions">
+          <button class="btn btn-primary btn-full" id="btn-drawer-checkout-trigger">
+            <i class="fa-solid fa-ticket"></i> Proceed to Ticket Selection
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STICKY BOOKING WIZARD MODAL -->
+    <div class="modal-backdrop" id="booking-wizard-overlay">
+      <div class="modal-card booking-wizard-modal">
+        <button class="close-modal-btn" id="btn-close-booking-wizard">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="booking-modal-header">
+          <h2>Secure Tickets</h2>
+          <p id="booking-event-title-lbl">ElectroWave Summer Festival 2026</p>
+        </div>
+
+        <div class="booking-modal-body">
+          <div class="booking-steps-nav">
+            <div class="step-indicator active" id="indicator-step1">1. Select Tier</div>
+            <div class="step-indicator" id="indicator-step2">2. Info & Checkout</div>
+          </div>
+
+          <form id="booking-flow-form">
+            <!-- STEP 1 -->
+            <div class="booking-step-content active" id="booking-step1-pane">
+              <div class="tiers-options-stack">
+                <div class="tier-option-card active" data-tier="general">
+                  <div class="tier-meta">
+                    <span class="tier-name">General Admission</span>
+                    <span class="tier-availability" id="availability-general">120 left</span>
+                  </div>
+                  <div class="tier-price" id="price-general-val">$65</div>
+                </div>
+                <div class="tier-option-card" data-tier="vip">
+                  <div class="tier-meta">
+                    <span class="tier-name">VIP Lounge Access</span>
+                    <span class="tier-availability" id="availability-vip">15 left</span>
+                  </div>
+                  <div class="tier-price" id="price-vip-val">$150</div>
+                </div>
+              </div>
+
+              <div class="qty-selector-row">
+                <span>Number of tickets</span>
+                <div class="qty-control">
+                  <button type="button" class="btn-qty" id="qty-minus"><i class="fa-solid fa-minus"></i></button>
+                  <span class="qty-val" id="qty-display-val">1</span>
+                  <button type="button" class="btn-qty" id="qty-plus"><i class="fa-solid fa-plus"></i></button>
+                </div>
+              </div>
+
+              <div class="step-navigation-footer">
+                <button type="button" class="btn btn-primary btn-full" id="btn-next-step1">
+                  Continue to Checkout <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="booking-step-content" id="booking-step2-pane">
+              <div class="customer-info-section">
+                <h3>Contact Details</h3>
+                <div class="form-control">
+                  <label for="checkout-name">Full Name *</label>
+                  <input type="text" id="checkout-name" placeholder="John Doe" required />
+                </div>
+                <div class="form-control">
+                  <label for="checkout-email">Email Address *</label>
+                  <input type="email" id="checkout-email" placeholder="johndoe@example.com" required />
+                </div>
+              </div>
+
+              <div class="booking-checkout-summary">
+                <h3>Order Summary</h3>
+                <div class="coupon-entry-row">
+                  <input type="text" id="coupon-code-input" placeholder="Coupon Code (EARLYBIRD20)" />
+                  <button type="button" class="btn btn-secondary" id="btn-apply-coupon">Apply</button>
+                </div>
+                <span class="coupon-status-msg" id="coupon-message"></span>
+
+                <div class="summary-receipt">
+                  <div class="receipt-row">
+                    <span id="receipt-qty-desc">General Ticket x 1</span>
+                    <span id="receipt-base-price">$65.00</span>
+                  </div>
+                  <div class="receipt-row text-green" id="receipt-discount-row" style="display: none;">
+                    <span>Discount Coupon</span>
+                    <span id="receipt-discount-val">-$0.00</span>
+                  </div>
+                  <div class="receipt-row">
+                    <span>Booking Fees (2.5%)</span>
+                    <span id="receipt-fees-val">$1.63</span>
+                  </div>
+                  <hr class="receipt-divider" />
+                  <div class="receipt-row total">
+                    <span>Total Cost</span>
+                    <span id="receipt-total-val">$66.63</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-navigation-footer double-btn">
+                <button type="button" class="btn btn-secondary" id="btn-back-step2">
+                  <i class="fa-solid fa-arrow-left"></i> Change Tickets
+                </button>
+                <button type="submit" class="btn btn-primary" id="btn-confirm-payment">
+                  <i class="fa-solid fa-shield-halved"></i> Complete Booking
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- TICKET GENERATOR PASS MODAL -->
+    <div class="modal-backdrop" id="ticket-pass-modal-overlay">
+      <div class="modal-card ticket-pass-modal">
+        <button class="close-modal-btn" id="btn-close-pass-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="pass-modal-header">
+          <h2><i class="fa-solid fa-circle-check text-green"></i> Ticket Booking Successful!</h2>
+          <p>Your digital entrance gate pass has been generated.</p>
+        </div>
+        <div class="pass-modal-body" id="pass-render-target">
+          <!-- Dynamic SVG rendering -->
+        </div>
+        <div class="pass-modal-footer">
+          <button class="btn btn-primary" id="btn-download-pass">
+            <i class="fa-solid fa-download"></i> Download Ticket Pass
+          </button>
+          <button class="btn btn-secondary" id="btn-close-pass-view-finished">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST ALERTS SYSTEM -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Vite module loader script -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuxeThread Atelier | Premium Fashion E-Commerce</title>
+    <meta name="description" content="Discover premium streetwear, luxury outerwear, evening gowns, and bespoke accessories at LuxeThread Atelier. Enjoy global store branches, interactive flash offers, and instant shipping." />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Leaflet Map CSS (loaded via main.js imports as well, but added here for redundancy) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  </head>
+  <body>
+
+    <!-- LUXURY HEADER NAVIGATION -->
+    <header class="atelier-header">
+      <div class="header-logo">
+        <h1 id="brand-logo-txt">LuxeThread <span>Atelier</span></h1>
+      </div>
+      
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#" class="nav-item active" data-section="shop" id="nav-shop">Atelier Shop</a></li>
+          <li><a href="#" class="nav-item" data-section="offers" id="nav-offers">Exquisite Offers</a></li>
+          <li><a href="#" class="nav-item" data-section="branches" id="nav-branches">Maison Branches</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="action-btn" id="btn-theme-toggle" aria-label="Toggle light/dark theme" title="Toggle Theme">
+          <i class="fa-solid fa-sun"></i>
+        </button>
+        <button class="action-btn" id="btn-cart-toggle" aria-label="Open shopping cart drawer" title="Shopping Bag">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-count" id="cart-badge-count" style="display: none;">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN PAGE WRAPPER -->
+    <main class="main-content">
+      
+      <!-- ==========================================
+           SECTION 1: ATELIER SHOP (CATALOG)
+           ========================================== -->
+      <section class="page-section active" id="section-shop">
+        
+        <!-- HERO SECTION -->
+        <section class="hero-slider" aria-label="Featured Collection">
+          <!-- Our generated luxury image is loaded here -->
+          <div class="hero-banner-bg" style="background-image: url('src/assets/fashion_hero_banner.jpg');" role="img" aria-label="Luxury studio background"></div>
+          <div class="hero-content">
+            <span class="hero-subtitle">Haute Couture 2026</span>
+            <h2 class="hero-title">Elevate Your<br>Signature Vibe</h2>
+            <p class="hero-desc">Discover structured tailoring, premium knitwear, and exquisite evening silhouettes crafted for the bold, modern individual.</p>
+            <div class="hero-cta">
+              <button class="btn-luxury" id="btn-hero-shop">Explore Collection</button>
+              <button class="btn-luxury-outline" id="btn-hero-offers">View Special Offers</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- HIGHLIGHTS FEATURE BAR -->
+        <section class="highlights-bar" aria-label="Services Highlights">
+          <div class="highlight-item">
+            <div class="highlight-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            <div>
+              <h3 class="highlight-title">Global Express</h3>
+              <p class="highlight-desc">Complimentary shipping over ₹9,999</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon"><i class="fa-solid fa-rotate-left"></i></div>
+            <div>
+              <h3 class="highlight-title">Easy Returns</h3>
+              <p class="highlight-desc">30-day premium return policy</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon"><i class="fa-solid fa-gift"></i></div>
+            <div>
+              <h3 class="highlight-title">Atelier Wrapping</h3>
+              <p class="highlight-desc">Signature gift boxes & notes</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div>
+              <h3 class="highlight-title">Secure Checkouts</h3>
+              <p class="highlight-desc">Fully encrypted credit card flows</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SHOP CONTAINER -->
+        <div class="shop-container">
+          <div class="section-header">
+            <span class="section-subtitle">Exquisite Curation</span>
+            <h2 class="section-title">The Atelier Catalog</h2>
+          </div>
+
+          <div class="shop-layout">
+            
+            <!-- SIDEBAR FILTERS -->
+            <aside class="shop-filters">
+              
+              <!-- Search box -->
+              <div class="filter-group">
+                <span class="filter-title">Search Items</span>
+                <div class="search-box">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="shop-search" placeholder="Search coat, silk, watch..." aria-label="Search catalog items" />
+                </div>
+              </div>
+
+              <!-- Categories -->
+              <div class="filter-group">
+                <span class="filter-title">Categories</span>
+                <div class="category-list">
+                  <button class="category-btn active" data-category="All">All Items <span class="badge">14</span></button>
+                  <button class="category-btn" data-category="Outerwear">Outerwear <span class="badge">4</span></button>
+                  <button class="category-btn" data-category="Dresses">Dresses <span class="badge">5</span></button>
+                  <button class="category-btn" data-category="Activewear">Activewear <span class="badge">3</span></button>
+                  <button class="category-btn" data-category="Accessories">Accessories <span class="badge">2</span></button>
+                </div>
+              </div>
+
+              <!-- Colors -->
+              <div class="filter-group">
+                <span class="filter-title">Colors</span>
+                <div class="color-options">
+                  <button class="color-option active" data-color="All" title="All colors" style="font-size: 10px; color: var(--text-secondary);">All</button>
+                  <button class="color-option" data-color="Black" title="Black"><span class="color-dot" style="background-color: #1a1a1a;"></span></button>
+                  <button class="color-option" data-color="White" title="White/Cream"><span class="color-dot" style="background-color: #f4f1ea;"></span></button>
+                  <button class="color-option" data-color="Gold" title="Gold/Beige"><span class="color-dot" style="background-color: #c5a880;"></span></button>
+                  <button class="color-option" data-color="Grey" title="Grey"><span class="color-dot" style="background-color: #7a7a7a;"></span></button>
+                  <button class="color-option" data-color="Brown" title="Brown"><span class="color-dot" style="background-color: #6f4e37;"></span></button>
+                </div>
+              </div>
+
+              <!-- Sizes -->
+              <div class="filter-group">
+                <span class="filter-title">Sizes</span>
+                <div class="size-options">
+                  <button class="size-option active" data-size="All">All</button>
+                  <button class="size-option" data-size="XS">XS</button>
+                  <button class="size-option" data-size="S">S</button>
+                  <button class="size-option" data-size="M">M</button>
+                  <button class="size-option" data-size="L">L</button>
+                  <button class="size-option" data-size="XL">XL</button>
+                </div>
+              </div>
+
+              <!-- Price range -->
+              <div class="filter-group">
+                <span class="filter-title">Max Price</span>
+                <div class="price-slider-wrapper">
+                  <input type="range" id="price-range" class="price-slider" min="999" max="30000" step="500" value="30000" aria-label="Max price threshold slider" />
+                  <div class="price-range-inputs">
+                    <span>₹999</span>
+                    <span id="price-max-val">₹30,000</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reset filters -->
+              <button class="btn-luxury-outline" id="btn-reset-filters" style="width:100%; padding: 12px; font-size:12px;">Reset All Filters</button>
+
+            </aside>
+
+            <!-- PRODUCT CATALOG LISTINGS -->
+            <div class="product-catalog">
+              <div class="catalog-info">
+                <p id="products-count">Showing 10 products</p>
+                <div class="sort-selector">
+                  <label for="sort-by" style="font-size:13px; color:var(--text-secondary); margin-right: 8px;">Sort by:</label>
+                  <select id="sort-by" class="sort-select">
+                    <option value="default">Default</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Top Rated</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="products-grid" id="products-grid">
+                <!-- Injected Dynamically by main.js -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SECTION 2: EXQUISITE OFFERS
+           ========================================== -->
+      <section class="page-section" id="section-offers">
+        <div class="offers-container">
+          <div class="section-header">
+            <span class="section-subtitle">Privileged Access</span>
+            <h2 class="section-title">Atelier Special Offers</h2>
+          </div>
+
+          <div class="offers-grid">
+            
+            <!-- FLASH SALE COUNTDOWN -->
+            <div class="flash-sale-banner">
+              <div class="flash-sale-info">
+                <h3>Vogue Flash Sale</h3>
+                <p>Enjoy extra seasonal markdowns on luxury cashmere and gowns. Grab your codes below!</p>
+              </div>
+              <div class="countdown-clock" aria-label="Offers timer countdown">
+                <div class="time-block">
+                  <span class="time-val" id="timer-hrs">02</span>
+                  <span class="time-lbl">Hrs</span>
+                </div>
+                <div class="time-block">
+                  <span class="time-val" id="timer-mins">14</span>
+                  <span class="time-lbl">Mins</span>
+                </div>
+                <div class="time-block">
+                  <span class="time-val" id="timer-secs">45</span>
+                  <span class="time-lbl">Secs</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCRATCH CARD GAME -->
+            <div class="interactive-panel glass">
+              <h4>Atelier Scratch & Win</h4>
+              <p>Rub your cursor or finger over the card below to reveal a secret custom voucher code!</p>
+              
+              <div class="scratch-card-container">
+                <!-- Revealed content underneath -->
+                <div class="scratch-card-reveal" id="scratch-reveal">
+                  <span>YOUR UNLOCKED CODE</span>
+                  <div class="code">SCRATCH25</div>
+                </div>
+                <!-- Interactive Scratch Canvas overlay -->
+                <canvas id="scratch-canvas" class="scratch-card-canvas"></canvas>
+              </div>
+            </div>
+
+            <!-- SPIN THE WHEEL GAME -->
+            <div class="interactive-panel glass">
+              <h4>Atelier Discount Wheel</h4>
+              <p>Spin the luxury wheel to land on an additional coupon code (Up to 50% Off)!</p>
+              
+              <div class="wheel-container">
+                <div class="wheel-pointer"></div>
+                <button class="wheel-spin-btn" id="btn-spin-wheel">SPIN</button>
+                <div class="wheel-svg-wrapper" id="wheel-svg">
+                  <!-- Custom SVG circular wheel divisions -->
+                  <svg width="340" height="340" viewBox="0 0 340 340" style="display: block;">
+                    <g transform="translate(170,170)">
+                      <!-- 6 Sectors: 10%, Try Again, 30%, Free Ship, 15%, 50% -->
+                      <!-- Sector 1: 0 to 60 deg -->
+                      <path d="M 0 0 L 0 -170 A 170 170 0 0 1 147.22 -85 Z" fill="#1C1D24" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                      <text transform="rotate(30) translate(0,-110) rotate(-30)" fill="#c5a880" font-size="11" font-weight="700" text-anchor="middle">10% OFF</text>
+                      
+                      <!-- Sector 2: 60 to 120 deg -->
+                      <path d="M 0 0 L 147.22 -85 A 170 170 0 0 1 147.22 85 Z" fill="#15161c" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                      <text transform="rotate(90) translate(0,-110) rotate(-90)" fill="#626673" font-size="10" font-weight="700" text-anchor="middle">TRY AGAIN</text>
+                      
+                      <!-- Sector 3: 120 to 180 deg -->
+                      <path d="M 0 0 L 147.22 85 A 170 170 0 0 1 0 170 Z" fill="#1C1D24" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                      <text transform="rotate(150) translate(0,-110) rotate(-150)" fill="#c5a880" font-size="11" font-weight="700" text-anchor="middle">30% OFF</text>
+                      
+                      <!-- Sector 4: 180 to 240 deg -->
+                      <path d="M 0 0 L 0 170 A 170 170 0 0 1 -147.22 85 Z" fill="#15161c" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                      <text transform="rotate(210) translate(0,-110) rotate(-210)" fill="#c5a880" font-size="10" font-weight="700" text-anchor="middle">FREE SHIP</text>
+                      
+                      <!-- Sector 5: 240 to 300 deg -->
+                      <path d="M 0 0 L -147.22 85 A 170 170 0 0 1 -147.22 -85 Z" fill="#1C1D24" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                      <text transform="rotate(270) translate(0,-110) rotate(-270)" fill="#c5a880" font-size="11" font-weight="700" text-anchor="middle">15% OFF</text>
+                      
+                      <!-- Sector 6: 300 to 360 deg -->
+                      <path d="M 0 0 L -147.22 -85 A 170 170 0 0 1 0 -170 Z" fill="#2b1f1a" stroke="var(--accent-gold)" stroke-width="2"/>
+                      <text transform="rotate(330) translate(0,-110) rotate(-330)" fill="#e2b1b1" font-size="11" font-weight="800" text-anchor="middle">JACKPOT 50%</text>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SECTION 3: MAISON BRANCHES (MAPS)
+           ========================================== -->
+      <section class="page-section" id="section-branches">
+        <div class="branches-container">
+          <div class="section-header">
+            <span class="section-subtitle">Global Presence</span>
+            <h2 class="section-title">Our Retail Maisons</h2>
+          </div>
+
+          <div class="branches-layout">
+            
+            <div class="branches-sidebar">
+              <!-- Location Finder button -->
+              <button class="btn-geolocation" id="btn-find-closest">
+                <i class="fa-solid fa-location-crosshairs"></i> Find Closest Atelier
+              </button>
+              
+              <!-- Cards listed dynamically -->
+              <div id="branch-list" style="display:flex; flex-direction:column; gap:16px;">
+                <!-- Loaded dynamically by main.js -->
+              </div>
+            </div>
+
+            <!-- Leaflet map container wrapper -->
+            <div class="map-wrapper">
+              <div id="map"></div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ==========================================
+         SHOPPING CART DRAWER (SIDE SLIDE PANEL)
+         ========================================== -->
+    <div class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <div class="cart-drawer-header">
+        <h2 id="cart-title">Your Atelier Bag</h2>
+        <button class="cart-drawer-close" id="cart-drawer-close" aria-label="Close cart drawer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable Cart Item list -->
+      <div class="cart-items-wrapper" id="cart-items">
+        <!-- Loaded dynamically -->
+      </div>
+
+      <!-- Cart Drawer Sticky subtotal checkout fields -->
+      <div class="cart-drawer-footer">
+        
+        <!-- Promo Coupon application -->
+        <div class="promo-code-box">
+          <input type="text" id="promo-input" placeholder="ENTER PROMO CODE (e.g. FASHION20)" aria-label="Apply discount coupon code" />
+          <button class="btn-promo-apply" id="btn-promo-apply">Apply</button>
+        </div>
+        <div id="promo-msg" class="promo-msg" style="display: block;"></div>
+
+        <div class="price-summary">
+          <div class="summary-row">
+            <span>Bag Subtotal</span>
+            <span id="cart-subtotal">₹0</span>
+          </div>
+          <div class="summary-row">
+            <span>Voucher Discount</span>
+            <span id="cart-discount">-₹0</span>
+          </div>
+          <div class="summary-row">
+            <span>Express Shipping</span>
+            <span id="cart-shipping">₹0</span>
+          </div>
+          <div class="summary-row total">
+            <span>Estimated Total</span>
+            <span id="cart-total">₹0</span>
+          </div>
+        </div>
+
+        <button class="btn-checkout" id="btn-cart-checkout">Proceed to Checkout</button>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         QUICK VIEW MODAL WINDOW
+         ========================================== -->
+    <div class="modal-backdrop" id="quickview-modal" role="dialog" aria-modal="true">
+      <div class="modal-window">
+        <button class="modal-close" aria-label="Close modal dialog"><i class="fa-solid fa-xmark"></i></button>
+        <div class="quickview-layout">
+          
+          <div class="quickview-gallery">
+            <img src="" alt="" id="qv-img" class="quickview-img" />
+          </div>
+
+          <div class="quickview-details">
+            <h2 class="qv-title" id="qv-title">Product Title</h2>
+            <div class="qv-price-row">
+              <span class="qv-price" id="qv-price">₹0</span>
+              <span class="qv-old-price" id="qv-old-price" style="display: none;">₹0</span>
+            </div>
+            
+            <p class="qv-desc" id="qv-desc">Detailed product description goes here...</p>
+
+            <!-- Size selectors -->
+            <div>
+              <span class="qv-selector-title">Select Size</span>
+              <div class="size-options" id="qv-sizes-container">
+                <!-- Injected dynamically -->
+              </div>
+            </div>
+
+            <!-- Color selectors -->
+            <div>
+              <span class="qv-selector-title">Select Color</span>
+              <div class="color-options" id="qv-colors-container">
+                <!-- Injected dynamically -->
+              </div>
+            </div>
+
+            <!-- Stepper and Add to Cart -->
+            <div class="qv-actions">
+              <div class="quantity-stepper">
+                <button id="qv-qty-minus" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+                <span id="qv-qty-val">1</span>
+                <button id="qv-qty-plus" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+              </div>
+              <button class="qv-add-to-cart-btn" id="btn-qv-add">
+                <i class="fa-solid fa-bag-shopping"></i> Add to Bag
+              </button>
+            </div>
+
+            <!-- Dynamic Reviews List -->
+            <div class="qv-reviews-header">
+              <span class="qv-selector-title">Verified Customer Reviews</span>
+              <div class="reviews-list" id="qv-reviews">
+                <!-- Injected dynamically -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         SIMULATED CHECKOUT & ORDER TIMELINE TRACKER
+         ========================================== -->
+    <div class="modal-backdrop" id="checkout-modal" role="dialog" aria-modal="true">
+      <div class="modal-window" style="max-width: 950px;">
+        <button class="modal-close" aria-label="Close checkout tracker modal"><i class="fa-solid fa-xmark"></i></button>
+        
+        <div class="checkout-modal-layout">
+          <div class="checkout-grid">
+            
+            <!-- Shipping details form -->
+            <div class="checkout-form-container">
+              <h3>Secure Checkout</h3>
+              <form id="checkout-form" class="checkout-form">
+                
+                <div class="form-group">
+                  <label for="checkout-name">Recipient Name</label>
+                  <input type="text" id="checkout-name" required placeholder="Evelyn Dupont" />
+                </div>
+                
+                <div class="form-group">
+                  <label for="checkout-email">Email Address</label>
+                  <input type="email" id="checkout-email" required placeholder="evelyn@example.com" />
+                </div>
+
+                <div class="form-group">
+                  <label for="checkout-address">Delivery Address</label>
+                  <input type="text" id="checkout-address" required placeholder="72 Avenue Montaigne, 75008 Paris" />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="checkout-card">Credit Card Number</label>
+                    <input type="text" id="checkout-card" required placeholder="•••• •••• •••• 4022" />
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="checkout-exp">Expiry</label>
+                      <input type="text" id="checkout-exp" required placeholder="MM/YY" />
+                    </div>
+                    <div class="form-group">
+                      <label for="checkout-cvv">CVV</label>
+                      <input type="password" id="checkout-cvv" required placeholder="•••" />
+                    </div>
+                  </div>
+                </div>
+
+                <button class="btn-luxury" type="submit" id="btn-place-order" style="margin-top: 15px; width: 100%;">
+                  <i class="fa-solid fa-lock"></i> Authorize & Place Order
+                </button>
+              </form>
+            </div>
+
+            <!-- Simulated step tracker side -->
+            <div class="order-tracking-container">
+              <h4>Order Tracking Terminal</h4>
+              <p style="font-size:12px; color: var(--text-secondary); margin-top: -16px; margin-bottom: 20px;">
+                Submit the form on the left to activate simulated real-time shipping milestones tracking.
+              </p>
+
+              <div class="tracking-timeline">
+                <!-- Vertical progress line -->
+                <div class="timeline-progress-bar" id="timeline-progress"></div>
+
+                <div class="timeline-step" id="step-0">
+                  <div class="step-marker"><i class="fa-solid fa-receipt"></i></div>
+                  <div class="step-info">
+                    <span class="step-title">Order Confirmed</span>
+                    <span class="step-desc">Payment authorized and invoice registered.</span>
+                  </div>
+                </div>
+
+                <div class="timeline-step" id="step-1">
+                  <div class="step-marker"><i class="fa-solid fa-box-tissue"></i></div>
+                  <div class="step-info">
+                    <span class="step-title">Processing & Packing</span>
+                    <span class="step-desc">Items boxed in custom luxury wrapping at nearest warehouse.</span>
+                  </div>
+                </div>
+
+                <div class="timeline-step" id="step-2">
+                  <div class="step-marker"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                  <div class="step-info">
+                    <span class="step-title">In Transit</span>
+                    <span class="step-desc">Dispatched via premium express courier service.</span>
+                  </div>
+                </div>
+
+                <div class="timeline-step" id="step-3">
+                  <div class="step-marker"><i class="fa-solid fa-house-chimney-user"></i></div>
+                  <div class="step-info">
+                    <span class="step-title">Out for Delivery</span>
+                    <span class="step-desc">Delivered safely directly to your doorstep.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRESTIGE ATELIER FOOTER -->
+    <footer class="atelier-footer">
+      <div class="footer-grid">
+        
+        <div class="footer-brand">
+          <h2>LuxeThread <span>Atelier</span></h2>
+          <p>Bespoke tailoring, luxury silhouettes, and premium accessories engineered for structural grace and timeless aesthetics.</p>
+          <div class="footer-socials">
+            <a href="#" aria-label="Atelier Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Atelier Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+            <a href="#" aria-label="Atelier Twitter/X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" aria-label="Atelier Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Atelier Shop</h4>
+          <ul>
+            <li><a href="#" onclick="document.querySelector('[data-section=\'shop\']').click();">All Outerwear</a></li>
+            <li><a href="#" onclick="document.querySelector('[data-section=\'shop\']').click();">Bespoke Dresses</a></li>
+            <li><a href="#" onclick="document.querySelector('[data-section=\'shop\']').click();">Tech Joggers</a></li>
+            <li><a href="#" onclick="document.querySelector('[data-section=\'shop\']').click();">Luxury Timepieces</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Customer Care</h4>
+          <ul>
+            <li><a href="#">Book a Consultation</a></li>
+            <li><a href="#">Size Guides</a></li>
+            <li><a href="#">Returns & Exchanges</a></li>
+            <li><a href="#">Premium Care Guides</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Maison Newsletter</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Subscribe for seasonal collection releases and early scratch access.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed! Check your inbox for custom welcomes.'); this.reset();">
+            <input type="email" placeholder="email@address.com" required aria-label="Newsletter email subscription" />
+            <button class="btn-newsletter" type="submit">Sign Up</button>
+          </form>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 LuxeThread Atelier. Crafted with prestige. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Core Vite JavaScript Entrypoint -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
